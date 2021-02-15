@@ -150,6 +150,6 @@ project %>%                    # Start with awards.
 
 ```
 
-This plot shows 4 variables. The x-axis variance, the y-axis energy, the size of the dots is loudness and the color is the mode.It point out some difference between the classical songs and the newer songs. Especially the difference in Valence and the difference energy are remarkable. 
+This plot shows 4 variables. The x-axis variance, the y-axis energy, the size of the dots is loudness and the color is the mode.It points out some difference between the classical songs and the newer songs. Especially the difference in Valence and the difference energy are remarkable. 
 
 
