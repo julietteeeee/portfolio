@@ -16,7 +16,7 @@ library(remotes)
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r}
+```{r, echo=FALSE}
 classical <- get_playlist_audio_features("", "0UEGOBtALCL7RgScgDhUx1")
 new <- get_playlist_audio_features("", "3jqW2ItEMYCM3Pl5Fnj3Pu")
 
@@ -56,7 +56,7 @@ new %>%
 ```
 
 
-```{r}
+```{r, echo=FALSE}
 project <-
   bind_rows(
     classical %>% mutate(category = "Classical"),
@@ -64,7 +64,7 @@ project <-
   )
 ```
 
-```{r}
+```{r, echo=FALSE}
 project %>%
   ggplot(aes(x = loudness, fill = category)) +
   geom_histogram(binwidth = 0.5, position = "dodge")
@@ -74,7 +74,7 @@ project %>%
   geom_histogram(binwidth = 0.1, position = "dodge")
 
 ```
-```{r}
+```{r, echo=FALSE}
 project %>%                    # Start with awards.
   mutate(
     mode = ifelse(mode == 0, "Minor", "Major")
