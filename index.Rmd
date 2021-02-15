@@ -4,11 +4,12 @@ author: "Juliette de Waal"
 date: "9 februari 2021"
 output: html_document
 ---
-```{r}
+```{r, echo=FALSE}
 library(tidyverse)
 library(spotifyr)
 library(usethis)
 library(remotes)
+library(ggthemes)
 ```
 
 
@@ -97,12 +98,12 @@ project %>%                    # Start with awards.
     ),
     data = 
       tibble(
-        label = c("Altijd wel iemand", "ENERGY"),
+        label = c("Clair de Lune, L.32 ", "Say You'll Go"),
         category = c("Classical", "New"),
         valence = c(0.090, 0.123),
         energy = c(0.101, 0.967)
       ),
-    colour = "black",         # Override colour (not mode here).
+    colour = "red",         # Override colour (not mode here).
     size = 3,                 # Override size (not loudness here).
     hjust = "left",           # Align left side of label with the point.
     vjust = "bottom",         # Align bottom of label with the point.
@@ -128,13 +129,17 @@ project %>%                    # Start with awards.
     trans = "exp",            # Use an exp transformation to emphasise loud.
     guide = "none"            # Remove the legend for size.
   ) +
-  theme_light() +             # Use a simpler theme.
+  theme_minimal() +             # Use a simpler theme.
   labs(                       # Make the titles nice.
-    x = "Valence",
-    y = "Energy",
+    x = "valence",
+    y = "energy",
     colour = "Mode"
   )
 
+```
+
+```{r}
+z <- ggplot(project, aes(x= energy, y=valence, color= ))
 ```
 
 
