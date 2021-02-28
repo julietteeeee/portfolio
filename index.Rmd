@@ -5,6 +5,7 @@ date: "9 februari 2021"
 output: 
   flexdashboard::flex_dashboard:
     storyboard: true
+    theme: readable
 ---
 ```{r, echo=FALSE}
 library(tidyverse)
@@ -14,17 +15,16 @@ library(remotes)
 library(ggthemes)
 library(plotly)
 ```
-### eerste info
+### There are more songs inspired by classical pieces than you might think...
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, include=FALSE}
 classical <- get_playlist_audio_features("", "0UEGOBtALCL7RgScgDhUx1")
 new <- get_playlist_audio_features("", "3jqW2ItEMYCM3Pl5Fnj3Pu")
 
-new
 
 classical %>%
   summarise(
@@ -58,19 +58,47 @@ new %>%
     mad_liveness = mad(liveness)
   )
 ```
-Portfolio for the course Computational Musicology - Juliette de Waal (12348759) <br/>
+<front size = "15"> **Portfolio for the course Computational Musicology - Juliette de Waal** (12348759)</front> <br/> 
 
-Some time ago I heard a song named 'a Fifth of Beethoven' by Walter Murphy, and I really liked it. It is a disco instrumental song based on Beethoven's Symphony No. 5. I thought using famous classical music pieces to create new songs of another genre is a really cool concept. So I did some research and discovered that there are many more famous songs that are based and inspired on a classical piece of music, also songs I know for a long time but never knew that they have a classical origin.<br/>
-My corpus includes classical pieces and their linked new songs. I have found 25 pairs, so 50 songs in total.<br/>
+<front size = "4"> Some time ago I heard a song named 'a Fifth of Beethoven' by Walter Murphy,<br/>  and I really liked it. It is a disco instrumental song based on Beethoven's Symphony No. 5.<br/>  I thought using famous classical music pieces to create new songs of another genre is a really cool concept. So I did some research and discovered that there are many more famous songs that are based <br/>  and inspired on a classical piece of music, also songs I know for a long time <br/> but never knew that they have a classical origin.<br/>
+My corpus includes classical pieces and their linked new songs. <br/> I have found 25 pairs, so 50 songs in total.<br/>
 I think that this corpus makes really interesting comparisments possible, on different levels.<br/>
-For example between the songs based on the classical songs. What are the differences and similarities between these songs? Is the classical input used in the same way? Is there an common genre?<br/>
-But of course exploring relation between the song based on a classic song and the original classical song itself is really interesting. To what extent do you see the original classical back in the new songs? In which way is the original song adapted in de new song? Which changes are made? Maybe the tempo changed or other instruments are used.<br/>
-There are pairs of tracks in the corpus, like 'I can' – Nas/'Für Elise' -Beethoven and 'A fifth of Beethoven'-Woody/ Beethoven's Fifth Symphony- Beethoven, in which the relation with the origin classical song is very obvious. But there are also pairs in the corpus in which the original songs are more subtly included, like 'Grace Kelly'- Mika /  'Largo Al Factotum'- Rossini. <br/>
-It's important that I define my research a bit more, but I think this is a really interesting and fun corpus to explore with enough possibilities.
+For example between the songs based on the classical songs. <br/> What are the differences and similarities between these songs? <br/> Is the classical input used in the same way? Is there an common genre?<br/>
+But of course exploring relation between the song based on a classic song and the original classical song itself is really interesting. <br/> To what extent do you see the original classical back in the new songs? In which way is the original song adapted in de new song? Which changes are made? Maybe the tempo changed or other instruments are used.<br/>
+There are pairs of tracks in the corpus, like 'I can' – Nas/'Für Elise' -Beethoven and 'A fifth of Beethoven'-Woody/ Beethoven's Fifth Symphony- Beethoven, <br/> in which the relation with the origin classical song is very obvious. But there are also pairs in the corpus in which the original songs are more subtly included, like 'Grace Kelly'- Mika /  'Largo Al Factotum'- Rossini. <br/>
+It's important that I define my research a bit more, but I think this is a really interesting and fun corpus to explore with enough possibilities. </front>
 
-***
+**songs in the corpus**
 
-### twee histogrammen
+| New | Classical |
+|------:|:-----|
+| I can - Nas | 12 | 
+| A fifth of Beethoven - Walter Murphy | Fur Elise - Beethoven |
+| Because - The Beatles | Symphony No, 5 in C minor - Beethoven |
+| Can't Help falling in Love - Elvis Presley | Sonata No. 14 "Moonlight" in C sharp | 
+| All by myself - Eric Carmen |  |
+| The Globalist - Muse |  |
+| Say You'll Go |  | 
+| Old money - Lana Del Rey |  |
+| Little Me - Little Mix |  |
+| I Believe in Father Christmas - Greg Lake |  | 
+| Road to Joy - Bright Eyes |  |
+| It's A Hard Life - Queen |  |
+| Tocacata - Sky |  | 
+| A Whiter Shade of Pale - Procol Harum |  |
+| Could it Be Magic - Barry Manilow |  |
+| Go West - Pet Shop Boys |  | 
+| Alejandro - Lady Gaga |  |
+| Ave Maria - Beyonce |  |
+| Sara - Starship |  | 
+| Exit Music (For a Film) - Radiohead |  |
+| Bad Romance - Lady Gaga |  |
+| Russians - Sting |  | 
+| My Reverie - Ella Fitzgerald |  |
+| Hey Jude - The Beatles |  |
+
+
+### How do the inspired newer songs relate to the classical songs?
 
 ```{r, echo=FALSE}
 project <-
@@ -87,6 +115,7 @@ plot_loudness <- project %>%
 
 ggplotly(plot_loudness)
 
+
 plot_danceability <- project %>%
   ggplot(aes(x = danceability, fill = category)) +
   geom_histogram(binwidth = 0.1, position = "dodge")
@@ -94,11 +123,13 @@ plot_danceability <- project %>%
 ggplotly(plot_danceability)
 
 ```
-I made some simple but clear histograms of the loudness and danceability of the classical en new songs, In the histograms you see the clear diference in the distributions of the two categories, classical songs and the new songs that are basted on the classical songs. The new songs are signifant louder than the classical songs. The danceability is also higher for the new songs.
 
 ***
 
-### eind plot
+I made some simple but clear histograms of the loudness and danceability of the classical en new songs, In the histograms you see the clear diference in the distributions of the two categories, classical songs and the new songs that are basted on the classical songs. The new songs are signifant louder than the classical songs. The danceability is also higher for the new songs.
+
+
+### Inspired but apparently with a lot more energy and loudness
 
 
 ```{r, echo=FALSE}
@@ -166,13 +197,144 @@ ggplotly(plot_all)
 
 ```
 
+***
+
 This plot shows 4 variables. The x-axis variance, the y-axis energy, the size of the dots is loudness and the color is the mode.It points out some difference between the classical songs and the newer songs. Especially the difference in Valence and the difference energy are remarkable. 
 
 
-```{r}
+```{r, echo=FALSE, include=FALSE}
 library(tidyverse)
 library(spotifyr)
 library(compmus)
 ```
 
+### Chromagram
+
+```{r, echo=FALSE, include=FALSE}
+because <-
+  get_tidy_audio_analysis("6DwN81QZmeuwwH4cGssrjl") %>%
+  select(segments) %>%
+  unnest(segments) %>%
+  select(start, duration, pitches)
+
+sonata <- 
+  get_tidy_audio_analysis("3eLlW0GegkXy3o92t51xaJ") %>%
+  select(segments) %>%
+  unnest(segments) %>%
+  select(start, duration, pitches)
+
+```
+
+
+```{r}
+compmus_long_distance(
+  because %>% mutate(pitches = map(pitches, compmus_normalise, "manhattan")),
+  sonata %>% mutate(pitches = map(pitches, compmus_normalise, "manhattan")),
+  feature = pitches,
+  method = "manhattan"
+) %>%
+  ggplot(
+    aes(
+      x = xstart + xduration / 2,
+      width = xduration,
+      y = ystart + yduration / 2,
+      height = yduration,
+      fill = d
+    )
+  ) +
+  geom_tile() +
+  coord_equal() +
+  labs(x = "because", y = "sonata") +
+  theme_minimal() +
+  scale_fill_viridis_c(guide = NULL)
+```
+
+### Cepstrograms
+
+```{r, echo=FALSE, include=FALSE}
+bzt <-
+  get_tidy_audio_analysis("6DwN81QZmeuwwH4cGssrjl") %>% # Change URI.
+  compmus_align(bars, segments) %>%                     # Change `bars`
+  select(bars) %>%                                      #   in all three
+  unnest(bars) %>%                                      #   of these lines.
+  mutate(
+    pitches =
+      map(segments,
+        compmus_summarise, pitches,
+        method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  ) %>%
+  mutate(
+    timbre =
+      map(segments,
+        compmus_summarise, timbre,
+        method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  )
+```
+
+```{r, echo=FALSE, include=FALSE}
+bzt %>%
+  compmus_gather_timbre() %>%
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = basis,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  scale_fill_viridis_c() +                              
+  theme_classic()
+```
+```{r, echo=FALSE, include=FALSE}
+wood <-
+  get_tidy_audio_analysis("6DwN81QZmeuwwH4cGssrjl") %>%
+  select(segments) %>%
+  unnest(segments) %>%
+  select(start, duration, pitches)
+```
+
+
+```{r}
+
+wood %>%
+  mutate(pitches = map(pitches, compmus_normalise, "euclidean")) %>%
+  compmus_gather_chroma() %>% 
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = pitch_class,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  theme_minimal() +
+  scale_fill_viridis_c()
+```
+
+### self-similarity matrix
+
+```{r}
+bzt %>%
+  compmus_self_similarity(timbre, "cosine") %>% 
+  ggplot(
+    aes(
+      x = xstart + xduration / 2,
+      width = xduration,
+      y = ystart + yduration / 2,
+      height = yduration,
+      fill = d
+    )
+  ) +
+  geom_tile() +
+  coord_fixed() +
+  scale_fill_viridis_c(guide = "none") +
+  theme_classic() +
+  labs(x = "", y = "")
+```
 
