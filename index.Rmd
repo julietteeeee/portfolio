@@ -2,7 +2,9 @@
 title: "Music inspired by classical songs"
 author: "Juliette de Waal"
 date: "9 februari 2021"
-output: html_document
+output: 
+  flexdashboard::flex_dashboard:
+    storyboard: true
 ---
 ```{r, echo=FALSE}
 library(tidyverse)
@@ -10,8 +12,9 @@ library(spotifyr)
 library(usethis)
 library(remotes)
 library(ggthemes)
+library(plotly)
 ```
-
+### eerste info
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -65,6 +68,10 @@ But of course exploring relation between the song based on a classic song and th
 There are pairs of tracks in the corpus, like 'I can' – Nas/'Für Elise' -Beethoven and 'A fifth of Beethoven'-Woody/ Beethoven's Fifth Symphony- Beethoven, in which the relation with the origin classical song is very obvious. But there are also pairs in the corpus in which the original songs are more subtly included, like 'Grace Kelly'- Mika /  'Largo Al Factotum'- Rossini. <br/>
 It's important that I define my research a bit more, but I think this is a really interesting and fun corpus to explore with enough possibilities.
 
+***
+
+### twee histogrammen
+
 ```{r, echo=FALSE}
 project <-
   bind_rows(
@@ -74,21 +81,28 @@ project <-
 ```
 
 ```{r, echo=FALSE}
-project %>%
+plot_loudness <- project %>%
   ggplot(aes(x = loudness, fill = category)) +
   geom_histogram(binwidth = 0.5, position = "dodge")
 
-project %>%
+ggplotly(plot_loudness)
+
+plot_danceability <- project %>%
   ggplot(aes(x = danceability, fill = category)) +
   geom_histogram(binwidth = 0.1, position = "dodge")
+
+ggplotly(plot_danceability)
 
 ```
 I made some simple but clear histograms of the loudness and danceability of the classical en new songs, In the histograms you see the clear diference in the distributions of the two categories, classical songs and the new songs that are basted on the classical songs. The new songs are signifant louder than the classical songs. The danceability is also higher for the new songs.
 
+***
+
+### eind plot
 
 
 ```{r, echo=FALSE}
-project %>%                    # Start with awards.
+plot_all <- project %>%                    # Start with awards.
   mutate(
     mode = ifelse(mode == 0, "Minor", "Major")
   ) %>%
@@ -148,8 +162,17 @@ project %>%                    # Start with awards.
     colour = "Mode"
   )
 
+ggplotly(plot_all)
+
 ```
 
 This plot shows 4 variables. The x-axis variance, the y-axis energy, the size of the dots is loudness and the color is the mode.It points out some difference between the classical songs and the newer songs. Especially the difference in Valence and the difference energy are remarkable. 
+
+
+```{r}
+library(tidyverse)
+library(spotifyr)
+library(compmus)
+```
 
 
