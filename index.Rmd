@@ -14,7 +14,85 @@ library(usethis)
 library(remotes)
 library(ggthemes)
 library(plotly)
+library(compmus)
 ```
+
+
+### Compairing two songs with two self-similarity matrices
+
+```{r, echo=FALSE, include=FALSE}
+bzt <-
+  get_tidy_audio_analysis("0AQqrtK1pULuwZUXhwaaDz") %>% # Change URI.
+  compmus_align(bars, segments) %>%                     # Change `bars`
+  select(bars) %>%                                      #   in all three
+  unnest(bars) %>%                                      #   of these lines.
+  mutate(
+    pitches =
+      map(segments,
+        compmus_summarise, pitches,
+        method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  ) %>%
+  mutate(
+    timbre =
+      map(segments,
+        compmus_summarise, timbre,
+        method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  )
+```
+
+```{r, echo=FALSE, include=FALSE}
+bzt %>%
+  compmus_gather_timbre() %>%
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = basis,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  scale_fill_viridis_c() +                              
+  theme_classic()
+```
+
+
+```{r}
+bzt %>%
+  compmus_self_similarity(timbre, "cosine") %>% 
+  ggplot(
+    aes(
+      x = xstart + xduration / 2,
+      width = xduration,
+      y = ystart + yduration / 2,
+      height = yduration,
+      fill = d
+    )
+  ) +
+  geom_tile() +
+  coord_fixed() +
+  scale_fill_viridis_c(guide = "none") +
+  theme_classic() +
+  labs(x = "", y = "")
+```
+
+***
+
+The self-similarity matrices are an interesting tool for this corpus. By making to similarity matrices you can compair the song that is inspired by classical songs and the classicals songs itself. I did this for the songs 'all by myself' - Eric Carmen and the song that is it's source of inspiration 'Piano Concerto No. 2 in C minor' - Sergei Rachmaninoff. 
+You can see that the similiarity matrices do correspond and that the patterns look like each other. That looks like they have the same repetitions. 'All by myself' is a song in the corpus that has clear influences of Piano Concerto No. 2 in C minor. So that explains why the two self-similarity matrices look like each other.
+
+
+
+
+
+
+
+
+
+
 ### There are more songs inspired by classical pieces than you might think...
 
 ```{r setup, include=FALSE}
@@ -72,30 +150,31 @@ It's important that I define my research a bit more, but I think this is a reall
 
 | New | Classical |
 |------:|:-----|
-| I can - Nas | 12 | 
-| A fifth of Beethoven - Walter Murphy | Fur Elise - Beethoven |
-| Because - The Beatles | Symphony No, 5 in C minor - Beethoven |
-| Can't Help falling in Love - Elvis Presley | Sonata No. 14 "Moonlight" in C sharp | 
-| All by myself - Eric Carmen |  |
-| The Globalist - Muse |  |
-| Say You'll Go |  | 
-| Old money - Lana Del Rey |  |
-| Little Me - Little Mix |  |
-| I Believe in Father Christmas - Greg Lake |  | 
-| Road to Joy - Bright Eyes |  |
-| It's A Hard Life - Queen |  |
-| Tocacata - Sky |  | 
-| A Whiter Shade of Pale - Procol Harum |  |
-| Could it Be Magic - Barry Manilow |  |
-| Go West - Pet Shop Boys |  | 
-| Alejandro - Lady Gaga |  |
-| Ave Maria - Beyonce |  |
-| Sara - Starship |  | 
-| Exit Music (For a Film) - Radiohead |  |
-| Bad Romance - Lady Gaga |  |
-| Russians - Sting |  | 
-| My Reverie - Ella Fitzgerald |  |
-| Hey Jude - The Beatles |  |
+| I can - Nas | Fur Elise - Beethoven | 
+| A fifth of Beethoven - Walter Murphy | Symphony No, 5 in C minor - Beethoven |
+| Because - The Beatles | Sonata No. 14 "Moonlight" in C sharp |
+| Can't Help falling in Love - Elvis Presley | Martini: Plaisir d'amour - Jean-Paul-Egide Martini | 
+| All by myself - Eric Carmen | Piano Concerto No. 2 in C minor - Sergei Rachmaninoff |
+| The Globalist - Muse | Nimord From Enigma Variations - Edward Elgar  |
+| Say You'll Go | Clair de Lune, L.32 - Claude Debussy | 
+| Old money - Lana Del Rey | A time for Us - Nino Rota, Angele Dubeau  |
+| Little Me - Little Mix | Pavane, Op. 50 - Gabriel Faure |
+| I Believe in Father Christmas - Greg Lake | Prokofiev: suite from lieutenant kijé - Sergei Prokofiev | 
+| Road to Joy - Bright Eyes | Symphony No. 9 in D Minor, Op. 125 - Ludwig van Beethoven
+| It's A Hard Life - Queen | Vesti la giubba - Ruggero Leoncavallo |
+| Tocacata - Sky | Toccata and Fugue in D minor - Johann Sebastian Bach  | 
+| A Whiter Shade of Pale - Procol Harum | Air on a G string - Johann Sebastian |
+| Could it Be Magic - Barry Manilow | Preludes, Op. 28: No 20 in C minor - Frederic Chopin |
+| Go West - Pet Shop Boys | Canon in D - Johann Pachelbel | 
+| Alejandro - Lady Gaga | Csardas - Vittorio Monti |
+| Ave Maria - Beyonce | Schubert: Ave Maria, D. 839 - Franz Schubert |
+| Sara - Starship | Fantasia on a Theme by Thomas Tallis - Ralph Vaughan Williams | 
+| Grace Kelly - MIKA | Largo al factotum - Gioachino Rossini |
+| Exit Music (For a Film) - Radiohead |  Prelude in E minor, Op. 28, No. 4 - Frederic Chopin |
+| Bad Romance - Lady Gaga |The Well-Tempered Clavier: Book 1 - Johann Sebastian Bach|
+| Russians - Sting | Lieutenant Kijé, Opt. 60: 2. Romance - Sergei Prokofiev | 
+| My Reverie - Ella Fitzgerald | Reverie - Claude Debussy |
+| Hey Jude - The Beatles | Arioso (Adagio in G) - Johann Sebatian Bach  |
 
 
 ### How do the inspired newer songs relate to the classical songs?
@@ -202,11 +281,6 @@ ggplotly(plot_all)
 This plot shows 4 variables. The x-axis variance, the y-axis energy, the size of the dots is loudness and the color is the mode.It points out some difference between the classical songs and the newer songs. Especially the difference in Valence and the difference energy are remarkable. 
 
 
-```{r, echo=FALSE, include=FALSE}
-library(tidyverse)
-library(spotifyr)
-library(compmus)
-```
 
 ### Chromagram
 
@@ -251,9 +325,12 @@ compmus_long_distance(
 
 ### Cepstrograms
 
-```{r, echo=FALSE, include=FALSE}
-bzt <-
-  get_tidy_audio_analysis("6DwN81QZmeuwwH4cGssrjl") %>% # Change URI.
+
+
+
+```{r}
+all <-
+  get_tidy_audio_analysis("4rrrn8OLrttq7r9RgNXalU") %>% # Change URI.
   compmus_align(bars, segments) %>%                     # Change `bars`
   select(bars) %>%                                      #   in all three
   unnest(bars) %>%                                      #   of these lines.
@@ -274,7 +351,7 @@ bzt <-
 ```
 
 ```{r, echo=FALSE, include=FALSE}
-bzt %>%
+all%>%
   compmus_gather_timbre() %>%
   ggplot(
     aes(
@@ -289,6 +366,8 @@ bzt %>%
   scale_fill_viridis_c() +                              
   theme_classic()
 ```
+
+
 ```{r, echo=FALSE, include=FALSE}
 wood <-
   get_tidy_audio_analysis("6DwN81QZmeuwwH4cGssrjl") %>%
@@ -316,25 +395,3 @@ wood %>%
   theme_minimal() +
   scale_fill_viridis_c()
 ```
-
-### self-similarity matrix
-
-```{r}
-bzt %>%
-  compmus_self_similarity(timbre, "cosine") %>% 
-  ggplot(
-    aes(
-      x = xstart + xduration / 2,
-      width = xduration,
-      y = ystart + yduration / 2,
-      height = yduration,
-      fill = d
-    )
-  ) +
-  geom_tile() +
-  coord_fixed() +
-  scale_fill_viridis_c(guide = "none") +
-  theme_classic() +
-  labs(x = "", y = "")
-```
-
