@@ -17,6 +17,142 @@ library(plotly)
 library(compmus)
 ```
 
+
+### There are more songs inspired by classical pieces than you might think...
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, echo=FALSE, include=FALSE}
+classical <- get_playlist_audio_features("", "0UEGOBtALCL7RgScgDhUx1")
+new <- get_playlist_audio_features("", "3jqW2ItEMYCM3Pl5Fnj3Pu")
+
+
+classical %>%
+  summarise(
+    mean_speechiness = mean(speechiness),
+    mean_acousticness = mean(acousticness),
+    mean_liveness = mean(liveness),
+    sd_speechiness = sd(speechiness),
+    sd_acousticness = sd(acousticness),
+    sd_liveness = sd(liveness),
+    median_speechiness = median(speechiness),
+    median_acousticness = median(acousticness),
+    median_liveness = median(liveness),
+    mad_speechiness = mad(speechiness),
+    mad_acousticness = mad(acousticness),
+    mad_liveness = mad(liveness)
+  )
+
+new %>%
+  summarise(
+    mean_speechiness = mean(speechiness),
+    mean_acousticness = mean(acousticness),
+    mean_liveness = mean(liveness),
+    sd_speechiness = sd(speechiness),
+    sd_acousticness = sd(acousticness),
+    sd_liveness = sd(liveness),
+    median_speechiness = median(speechiness),
+    median_acousticness = median(acousticness),
+    median_liveness = median(liveness),
+    mad_speechiness = mad(speechiness),
+    mad_acousticness = mad(acousticness),
+    mad_liveness = mad(liveness)
+  )
+```
+<front size = "15"> **Portfolio for the course Computational Musicology - Juliette de Waal** (12348759)</front> <br/> 
+
+<front size = "4"> Some time ago I heard a song named 'a Fifth of Beethoven' by Walter Murphy,<br/>  and I really liked it. It is a disco instrumental song based on Beethoven's Symphony No. 5.<br/>  I thought using famous classical music pieces to create new songs of another genre is a really cool concept. So I did some research and discovered that there are many more famous songs that are based <br/>  and inspired on a classical piece of music, also songs I know for a long time <br/> but never knew that they have a classical origin.<br/>
+My corpus includes classical pieces and their linked new songs. <br/> I have found 25 pairs, so 50 songs in total.<br/>
+I think that this corpus makes really interesting comparisments possible, on different levels.<br/>
+For example between the songs based on the classical songs. <br/> What are the differences and similarities between these songs? <br/> Is the classical input used in the same way? Is there an common genre?<br/>
+But of course exploring relation between the song based on a classic song and the original classical song itself is really interesting. <br/> To what extent do you see the original classical back in the new songs? In which way is the original song adapted in de new song? Which changes are made? Maybe the tempo changed or other instruments are used.<br/>
+There are pairs of tracks in the corpus, like 'I can' – Nas/'Für Elise' -Beethoven and 'A fifth of Beethoven'-Woody/ Beethoven's Fifth Symphony- Beethoven, <br/> in which the relation with the origin classical song is very obvious. But there are also pairs in the corpus in which the original songs are more subtly included, like 'Grace Kelly'- Mika /  'Largo Al Factotum'- Rossini. <br/>
+It's important that I define my research a bit more, but I think this is a really interesting and fun corpus to explore with enough possibilities. </front>
+
+**songs in the corpus**
+
+| New | Classical |
+|------:|:-----|
+| I can - Nas | Fur Elise - Beethoven | 
+| A fifth of Beethoven - Walter Murphy | Symphony No, 5 in C minor - Beethoven |
+| Because - The Beatles | Sonata No. 14 "Moonlight" in C sharp |
+| Can't Help falling in Love - Elvis Presley | Martini: Plaisir d'amour - Jean-Paul-Egide Martini | 
+| All by myself - Eric Carmen | Piano Concerto No. 2 in C minor - Sergei Rachmaninoff |
+| The Globalist - Muse | Nimord From Enigma Variations - Edward Elgar  |
+| Say You'll Go | Clair de Lune, L.32 - Claude Debussy | 
+| Old money - Lana Del Rey | A time for Us - Nino Rota, Angele Dubeau  |
+| Little Me - Little Mix | Pavane, Op. 50 - Gabriel Faure |
+| I Believe in Father Christmas - Greg Lake | Prokofiev: suite from lieutenant kijé - Sergei Prokofiev | 
+| Road to Joy - Bright Eyes | Symphony No. 9 in D Minor, Op. 125 - Ludwig van Beethoven
+| It's A Hard Life - Queen | Vesti la giubba - Ruggero Leoncavallo |
+| Tocacata - Sky | Toccata and Fugue in D minor - Johann Sebastian Bach  | 
+| A Whiter Shade of Pale - Procol Harum | Air on a G string - Johann Sebastian |
+| Could it Be Magic - Barry Manilow | Preludes, Op. 28: No 20 in C minor - Frederic Chopin |
+| Go West - Pet Shop Boys | Canon in D - Johann Pachelbel | 
+| Alejandro - Lady Gaga | Csardas - Vittorio Monti |
+| Ave Maria - Beyonce | Schubert: Ave Maria, D. 839 - Franz Schubert |
+| Sara - Starship | Fantasia on a Theme by Thomas Tallis - Ralph Vaughan Williams | 
+| Grace Kelly - MIKA | Largo al factotum - Gioachino Rossini |
+| Exit Music (For a Film) - Radiohead |  Prelude in E minor, Op. 28, No. 4 - Frederic Chopin |
+| Bad Romance - Lady Gaga |The Well-Tempered Clavier: Book 1 - Johann Sebastian Bach|
+| Russians - Sting | Lieutenant Kijé, Opt. 60: 2. Romance - Sergei Prokofiev | 
+| My Reverie - Ella Fitzgerald | Reverie - Claude Debussy |
+| Hey Jude - The Beatles | Arioso (Adagio in G) - Johann Sebatian Bach  |
+
+
+
+
+
+###  Histogram of tempi 
+
+```{r, echo=FALSE, include=FALSE}
+newer <- get_playlist_audio_features("", "3jqW2ItEMYCM3Pl5Fnj3Pu")
+classical <- get_playlist_audio_features("", "0UEGOBtALCL7RgScgDhUx1")
+```
+
+```{r, echo=FALSE, include=FALSE}
+newer_and_classical <-
+  bind_rows(
+    newer %>% mutate(category = "Newer"),
+    classical %>% mutate(category = "Classical")
+  )
+```
+
+#### tempo count
+
+```{r,echo=FALSE}
+hist1 <- ggplot(data = newer_and_classical, mapping = aes(x = tempo)) + 
+  geom_histogram(aes(fill = category), position="dodge") +
+  theme_minimal() +
+  ggtitle("the inspired newer songs and the original classical songs") +
+  theme(legend.position="none")
+
+hist3 <- ggplot(data = newer_and_classical, mapping = aes(x = tempo, color = category)) + 
+  geom_density(alpha=0) +
+  theme_minimal() +
+  ggtitle("the inspired newer songs and the original classical songs")
+
+hist1
+```
+The tempi of the classical songs vary a lot. It's almost an evenly distributed graph, only a few more slower songs than faster songs. The different tempi for the inspired newer songs are closer to each other, less distributed. There is a peak for the newer songs around 120 bmp.
+
+#### tempo density
+
+
+```{r, echo=FALSE}
+hist3
+```
+
+
+
+### tempogram
+
+Still trying to fix this. My computer can't run the code of the tempograms because it keeps running forever.
+
+
+
 ### Some new visualizations: chordograms. Comparison of the inspired newer songs and the classical pieces
 
 ```{r, echo=FALSE, include=FALSE}
@@ -106,6 +242,10 @@ key_templates <-
     "D#:min", circshift(minor_key, 3)
   )
 ```
+
+
+
+
 
 #### chordogram 'Reverie' - Ella Fitzgerald
 
@@ -340,90 +480,6 @@ You can see that the similiarity matrices do correspond and that the patterns lo
 
 
 
-### There are more songs inspired by classical pieces than you might think...
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
-```{r, echo=FALSE, include=FALSE}
-classical <- get_playlist_audio_features("", "0UEGOBtALCL7RgScgDhUx1")
-new <- get_playlist_audio_features("", "3jqW2ItEMYCM3Pl5Fnj3Pu")
-
-
-classical %>%
-  summarise(
-    mean_speechiness = mean(speechiness),
-    mean_acousticness = mean(acousticness),
-    mean_liveness = mean(liveness),
-    sd_speechiness = sd(speechiness),
-    sd_acousticness = sd(acousticness),
-    sd_liveness = sd(liveness),
-    median_speechiness = median(speechiness),
-    median_acousticness = median(acousticness),
-    median_liveness = median(liveness),
-    mad_speechiness = mad(speechiness),
-    mad_acousticness = mad(acousticness),
-    mad_liveness = mad(liveness)
-  )
-
-new %>%
-  summarise(
-    mean_speechiness = mean(speechiness),
-    mean_acousticness = mean(acousticness),
-    mean_liveness = mean(liveness),
-    sd_speechiness = sd(speechiness),
-    sd_acousticness = sd(acousticness),
-    sd_liveness = sd(liveness),
-    median_speechiness = median(speechiness),
-    median_acousticness = median(acousticness),
-    median_liveness = median(liveness),
-    mad_speechiness = mad(speechiness),
-    mad_acousticness = mad(acousticness),
-    mad_liveness = mad(liveness)
-  )
-```
-<front size = "15"> **Portfolio for the course Computational Musicology - Juliette de Waal** (12348759)</front> <br/> 
-
-<front size = "4"> Some time ago I heard a song named 'a Fifth of Beethoven' by Walter Murphy,<br/>  and I really liked it. It is a disco instrumental song based on Beethoven's Symphony No. 5.<br/>  I thought using famous classical music pieces to create new songs of another genre is a really cool concept. So I did some research and discovered that there are many more famous songs that are based <br/>  and inspired on a classical piece of music, also songs I know for a long time <br/> but never knew that they have a classical origin.<br/>
-My corpus includes classical pieces and their linked new songs. <br/> I have found 25 pairs, so 50 songs in total.<br/>
-I think that this corpus makes really interesting comparisments possible, on different levels.<br/>
-For example between the songs based on the classical songs. <br/> What are the differences and similarities between these songs? <br/> Is the classical input used in the same way? Is there an common genre?<br/>
-But of course exploring relation between the song based on a classic song and the original classical song itself is really interesting. <br/> To what extent do you see the original classical back in the new songs? In which way is the original song adapted in de new song? Which changes are made? Maybe the tempo changed or other instruments are used.<br/>
-There are pairs of tracks in the corpus, like 'I can' – Nas/'Für Elise' -Beethoven and 'A fifth of Beethoven'-Woody/ Beethoven's Fifth Symphony- Beethoven, <br/> in which the relation with the origin classical song is very obvious. But there are also pairs in the corpus in which the original songs are more subtly included, like 'Grace Kelly'- Mika /  'Largo Al Factotum'- Rossini. <br/>
-It's important that I define my research a bit more, but I think this is a really interesting and fun corpus to explore with enough possibilities. </front>
-
-**songs in the corpus**
-
-| New | Classical |
-|------:|:-----|
-| I can - Nas | Fur Elise - Beethoven | 
-| A fifth of Beethoven - Walter Murphy | Symphony No, 5 in C minor - Beethoven |
-| Because - The Beatles | Sonata No. 14 "Moonlight" in C sharp |
-| Can't Help falling in Love - Elvis Presley | Martini: Plaisir d'amour - Jean-Paul-Egide Martini | 
-| All by myself - Eric Carmen | Piano Concerto No. 2 in C minor - Sergei Rachmaninoff |
-| The Globalist - Muse | Nimord From Enigma Variations - Edward Elgar  |
-| Say You'll Go | Clair de Lune, L.32 - Claude Debussy | 
-| Old money - Lana Del Rey | A time for Us - Nino Rota, Angele Dubeau  |
-| Little Me - Little Mix | Pavane, Op. 50 - Gabriel Faure |
-| I Believe in Father Christmas - Greg Lake | Prokofiev: suite from lieutenant kijé - Sergei Prokofiev | 
-| Road to Joy - Bright Eyes | Symphony No. 9 in D Minor, Op. 125 - Ludwig van Beethoven
-| It's A Hard Life - Queen | Vesti la giubba - Ruggero Leoncavallo |
-| Tocacata - Sky | Toccata and Fugue in D minor - Johann Sebastian Bach  | 
-| A Whiter Shade of Pale - Procol Harum | Air on a G string - Johann Sebastian |
-| Could it Be Magic - Barry Manilow | Preludes, Op. 28: No 20 in C minor - Frederic Chopin |
-| Go West - Pet Shop Boys | Canon in D - Johann Pachelbel | 
-| Alejandro - Lady Gaga | Csardas - Vittorio Monti |
-| Ave Maria - Beyonce | Schubert: Ave Maria, D. 839 - Franz Schubert |
-| Sara - Starship | Fantasia on a Theme by Thomas Tallis - Ralph Vaughan Williams | 
-| Grace Kelly - MIKA | Largo al factotum - Gioachino Rossini |
-| Exit Music (For a Film) - Radiohead |  Prelude in E minor, Op. 28, No. 4 - Frederic Chopin |
-| Bad Romance - Lady Gaga |The Well-Tempered Clavier: Book 1 - Johann Sebastian Bach|
-| Russians - Sting | Lieutenant Kijé, Opt. 60: 2. Romance - Sergei Prokofiev | 
-| My Reverie - Ella Fitzgerald | Reverie - Claude Debussy |
-| Hey Jude - The Beatles | Arioso (Adagio in G) - Johann Sebatian Bach  |
-
-
 ### How do the inspired newer songs relate to the classical songs?
 
 ```{r, echo=FALSE}
@@ -642,3 +698,8 @@ wood %>%
   theme_minimal() +
   scale_fill_viridis_c()
 ```
+
+
+
+
+
