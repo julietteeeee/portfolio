@@ -136,6 +136,8 @@ hist3 <- ggplot(data = newer_and_classical, mapping = aes(x = tempo, color = cat
 
 hist1
 ```
+***
+
 The tempi of the classical songs vary a lot. It's almost an evenly distributed graph, only a few more slower songs than faster songs. The different tempi for the inspired newer songs are closer to each other, less distributed. There is a peak for the newer songs around 120 bmp.
 
 #### tempo density
