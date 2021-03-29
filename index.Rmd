@@ -7,6 +7,8 @@ output:
     storyboard: true
     theme: readable
 ---
+
+
 ```{r, echo=FALSE}
 library(tidyverse)
 library(spotifyr)
@@ -15,10 +17,28 @@ library(remotes)
 library(ggthemes)
 library(plotly)
 library(compmus)
+library(ggdendro)
+#library(heatmaply)
+library(tidymodels)
+library(recipes)
+library(stringr)
+library(scales)
+```
+```{r, echo=FALSE}
+library(ggpubr)
 ```
 
 
-### There are more songs inspired by classical pieces than you might think...
+
+<style>
+  body {
+  background:#CDEEF3;
+  }
+</style>
+\
+
+
+### There are more songs inspired by classical pieces than you might think... {data-commentary-width=400}
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -61,20 +81,27 @@ new %>%
     mad_liveness = mad(liveness)
   )
 ```
-<front size = "15"> **Portfolio for the course Computational Musicology - Juliette de Waal** (12348759)</front> <br/> 
+<div style="max-width:600px; margin: 0 auto;">
+<h2> Portfolio for the course Computational Musicology </h2>
+<br/>
 
-<front size = "4"> Some time ago I heard a song named 'a Fifth of Beethoven' by Walter Murphy,<br/>  and I really liked it. It is a disco instrumental song based on Beethoven's Symphony No. 5.<br/>  I thought using famous classical music pieces to create new songs of another genre is a really cool concept. So I did some research and discovered that there are many more famous songs that are based <br/>  and inspired on a classical piece of music, also songs I know for a long time <br/> but never knew that they have a classical origin.<br/>
+<front size = "11"> Some time ago I heard a song named 'a Fifth of Beethoven' by Walter Murphy,<br/>  and I really liked it. It is a disco instrumental song based on Beethoven's Symphony No. 5.<br/>  I thought using famous classical music pieces to create new songs of another genre is a really cool concept. So I did some research and discovered that there are many more famous songs that are based <br/>  and inspired on a classical piece of music, also songs I know for a long time <br/> but never knew that they have a classical origin.<br/>
 My corpus includes classical pieces and their linked new songs. <br/> I have found 25 pairs, so 50 songs in total.<br/>
 I think that this corpus makes really interesting comparisments possible, on different levels.<br/>
 For example between the songs based on the classical songs. <br/> What are the differences and similarities between these songs? <br/> Is the classical input used in the same way? Is there an common genre?<br/>
 But of course exploring relation between the song based on a classic song and the original classical song itself is really interesting. <br/> To what extent do you see the original classical back in the new songs? In which way is the original song adapted in de new song? Which changes are made? Maybe the tempo changed or other instruments are used.<br/>
 There are pairs of tracks in the corpus, like 'I can' – Nas/'Für Elise' -Beethoven and 'A fifth of Beethoven'-Woody/ Beethoven's Fifth Symphony- Beethoven, <br/> in which the relation with the origin classical song is very obvious. But there are also pairs in the corpus in which the original songs are more subtly included, like 'Grace Kelly'- Mika /  'Largo Al Factotum'- Rossini. <br/>
 It's important that I define my research a bit more, but I think this is a really interesting and fun corpus to explore with enough possibilities. </front>
+</div>
 
-**songs in the corpus**
+---
 
-| New | Classical |
-|------:|:-----|
+<div style="width:100%">&nbsp;>
+
+<h2> songs in the corpus </h2>
+
+<front size = "10"> | New | Classical |
+|---------------------------:|:-------------------------------------|
 | I can - Nas | Fur Elise - Beethoven | 
 | A fifth of Beethoven - Walter Murphy | Symphony No, 5 in C minor - Beethoven |
 | Because - The Beatles | Sonata No. 14 "Moonlight" in C sharp |
@@ -100,12 +127,10 @@ It's important that I define my research a bit more, but I think this is a reall
 | Russians - Sting | Lieutenant Kijé, Opt. 60: 2. Romance - Sergei Prokofiev | 
 | My Reverie - Ella Fitzgerald | Reverie - Claude Debussy |
 | Hey Jude - The Beatles | Arioso (Adagio in G) - Johann Sebatian Bach  |
+</front>
 
+</div>
 
-
-
-
-###  Histogram of tempi 
 
 ```{r, echo=FALSE, include=FALSE}
 newer <- get_playlist_audio_features("", "3jqW2ItEMYCM3Pl5Fnj3Pu")
@@ -120,42 +145,377 @@ newer_and_classical <-
   )
 ```
 
-#### tempo count
-
-```{r,echo=FALSE}
-hist1 <- ggplot(data = newer_and_classical, mapping = aes(x = tempo)) + 
-  geom_histogram(aes(fill = category), position="dodge") +
-  theme_minimal() +
-  ggtitle("the inspired newer songs and the original classical songs") +
-  theme(legend.position="none")
-
-hist3 <- ggplot(data = newer_and_classical, mapping = aes(x = tempo, color = category)) + 
-  geom_density(alpha=0) +
-  theme_minimal() +
-  ggtitle("the inspired newer songs and the original classical songs")
-
-hist1
+```{r, echo=FALSE}
+project <-
+  bind_rows(
+    classical %>% mutate(category = "Classical"),
+    new %>% mutate(category = "New")
+  )
 ```
-***
 
-The tempi of the classical songs vary a lot. It's almost an evenly distributed graph, only a few more slower songs than faster songs. The different tempi for the inspired newer songs are closer to each other, less distributed. There is a peak for the newer songs around 120 bmp.
 
-#### tempo density
+
+
+### How do the inspired newer songs relate to the classical songs? {data-commentary-width=500}
+<div style="max-width:600px; margin: 0 auto; color=blue;"> 
 
 
 ```{r, echo=FALSE}
-hist3
+# get means
+M_dif <- project %>%
+  group_by(playlist_name) %>%
+  arrange(desc(playlist_name)) %>%
+    summarize(dan=mean(danceability), 
+              ene=mean(energy), 
+              lou=mean(loudness),
+              spe=mean(speechiness), 
+              aco=mean(acousticness), 
+              ins=mean(instrumentalness), 
+              liv=mean(liveness), 
+              val=mean(valence), 
+              tem=mean(tempo),
+              dur=mean(track.duration_ms),
+              dansd=sd(danceability), 
+              enesd=sd(energy), 
+              lousd=sd(loudness), 
+              spesd=sd(speechiness), 
+              acosd=sd(acousticness), 
+              inssd=sd(instrumentalness), 
+              livsd=sd(liveness), 
+              valsd=sd(valence), 
+              temsd=sd(tempo),
+              dursd=mean(track.duration_ms)
+              )
+M <- rbind(tail(M_dif, 1), head(M_dif, 1))
+MF <- M %>% mutate(playlist_name=c('Inspired newer songs', 'Original classical songs'))
+plot <- (
+  ggplot(MF) 
+  + geom_point(aes(x=playlist_name, y=dan, size=dansd, text=paste("<b>Danceability</b>\nValue:", dan, "\nSD:", dansd), alpha=0.5), col='#4B909B') 
+  + geom_line(aes(x=playlist_name, y=dan, group=1, alpha=0.5), col='#4B909B')
+  + geom_text(aes(x=0.7, y=first(dan), label='Danceability'), col='#4B909B')
+  
+  + geom_segment(aes(x=1, xend=1, y=0, yend=1), col='#C6D4D7', size=5, alpha=0.05)
+  + geom_segment(aes(x=2, xend=2, y=0, yend=1), col='#C6D4D7', size=5, alpha=0.05)
+  
+  
+  + geom_point(aes(x=playlist_name, y=ene, size=enesd, text=paste("<b>Energy</b>\nValue:", ene, "\nSD:", enesd), alpha=0.5), col='#38CED6') 
+  + geom_line(aes(x=playlist_name, y=ene, group=1, alpha=0.5), col='#38CED6')
+  + geom_text(aes(x=0.7, y=first(ene), label='Energy'), col='#38CED6')
+  
+  + geom_point(aes(x=playlist_name, y=spe, size=spesd, text=paste("<b>Speechiness</b>\nValue:", spe, "\nSD:", spesd), alpha=0.5), col='#FFCC00') 
+  + geom_line(aes(x=playlist_name, y=spe, group=1, alpha=0.5), col='#FFCC00')
+  + geom_text(aes(x=0.7, y=first(spe), label='Speechiness'), col='#FFCC00')
+  
+  + geom_point(aes(x=playlist_name, y=aco, size=acosd, text=paste("<b>Acousticness</b>\nValue:", aco, "\nSD:", acosd), alpha=0.5), col='#F0F461') 
+  + geom_line(aes(x=playlist_name, y=aco, group=1, alpha=0.5), col='#F0F461')
+  + geom_text(aes(x=0.7, y=first(aco), label='Acousticness'), col='#F0F461')
+  
+  + geom_point(aes(x=playlist_name, y=ins, size=inssd, text=paste("<b>Instrumentalness</b>\nValue:", ins, "\nSD:", inssd), alpha=0.5), col='#F9A731') 
+  + geom_line(aes(x=playlist_name, y=ins, group=1, alpha=0.5), col='#F9A731')
+  + geom_text(aes(x=0.7, y=first(ins), label='Instrumentalness'), col='#F9A731')
+  
+  + geom_point(aes(x=playlist_name, y=liv, size=livsd, text=paste("<b>Liveness</b>\nValue:", liv, "\nSD:", livsd), alpha=0.5), col='#3157F9') 
+  + geom_line(aes(x=playlist_name, y=liv, group=1, alpha=0.5), col='#3157F9')
+  + geom_text(aes(x=0.7, y=first(liv), label='Liveness'), col='#3157F9')
+  
+  + geom_point(aes(x=playlist_name, y=val, size=valsd, text=paste("<b>Valence</b>\nValue:", val, "\nSD:", valsd), alpha=0.5), col='#2C76C1') 
+  + geom_line(aes(x=playlist_name, y=val, group=2, alpha=0.5), col='#2C76C1')
+  + geom_text(aes(x=0.7, y=first(val), label='Valence'), col='#2C76C1')
+  
+  + xlab('')
+  + ylab('Value')
+  + theme_igray()
+  
+)
+ggplotly(plot, tooltip = c("text"))
+```
+</div>
+
+--- 
+
+#### A first look on the spotify API features of the two playlists
+
+<div>
+
+In this graph you can have a look at the different features  of the inspired songs and the features of the original songs. The lines in the plot show if there is a decrease or increase in value of the different features. A <span style='color:#F9D731'>yellow-ish line</span> means that from the inspired newer song to the original classical song, there is an increase of the feature. A <span style='color:#2C9CCB'>blue-ish line</span> means that from inspired newer song to the original classical song, there is an decrease of the feature. 
+
+
+<b> difference of the features (highest differences on top) </b>
+inspired newer songs <div class="arrow-right"></div> original classical songs 
+- instrumentalness:0.527
+- acousticness: 0.521
+- energy: -0.428
+- valence: -0.210
+- danceability: -0.170
+- speechiness: 0.129
+- liveness: -0.039
+
+
+
+### Inspired but apparently with a lot more energy and loudness {data-commentary-width=400}
+<div style="max-width:600px; margin: 0 auto; color=blue;"> 
+
+
+```{r, echo=FALSE}
+plot_all <- project %>%                    # Start with awards.
+  mutate(
+    mode = ifelse(mode == 0, "Minor", "Major")
+  ) %>%
+  ggplot(                     # Set up the plot.
+    aes(
+      x = valence,
+      y = energy,
+      size = loudness,
+      colour = mode
+    )
+  ) +
+  geom_point() +              # Scatter plot.
+  geom_rug(size = 0.1) +      # Add 'fringes' to show data distribution.
+  geom_text(                  # Add text labels from above.
+    aes(
+      x = valence,
+      y = energy,
+      label = label
+    ),
+    data = 
+      tibble(
+        label = c("Clair de Lune, L.32 ", "Say You'll Go"),
+        category = c("Classical", "New"),
+        valence = c(0.090, 0.123),
+        energy = c(0.101, 0.967)
+      ),
+    colour = "black",         # Override colour (not mode here).
+    size = 5,                 # Override size (not loudness here).
+    hjust = "left",           # Align left side of label with the point.
+    vjust = "bottom",         # Align bottom of label with the point.
+    nudge_x = -0.05,          # Nudge the label slightly left.
+    nudge_y = 0.02            # Nudge the label slightly up.
+  ) +
+  facet_wrap(~category) +     # Separate charts per playlist.
+  scale_x_continuous(         # Fine-tune the x axis.
+    limits = c(0, 1),
+    breaks = c(0, 0.50, 1),   # Use grid-lines for quadrants only.
+    minor_breaks = NULL       # Remove 'minor' grid-lines.
+  ) +
+  scale_y_continuous(         # Fine-tune the y axis in the same way.
+    limits = c(0, 1),
+    breaks = c(0, 0.50, 1),
+    minor_breaks = NULL
+  ) +
+  scale_colour_brewer(        # Use the Color Brewer to choose a palette.
+    type = "qual",            # Qualitative set.
+    palette = "Paired"        # Name of the palette is 'Paired'.
+  ) +
+  scale_size_continuous(      # Fine-tune the sizes of each point.
+    trans = "exp",            # Use an exp transformation to emphasise loud.
+    guide = "none"            # Remove the legend for size.
+  ) +
+  theme_gdocs() +             # Use a simpler theme.
+  labs(                       # Make the titles nice.
+    x = "valence",
+    y = "energy",
+    colour = "Mode"
+  )
+
+ggplotly(plot_all)
+
+```
+```{r, echo=FALSE}
+plot_loudness <- project %>%
+  ggplot(aes(x = loudness, fill = category)) +
+  geom_histogram(binwidth = 0.5, position = "dodge")
+
+plot_loudness
+```
+
+</div>
+
+---
+
+#### Some more interesting features
+
+ 
+This plot shows 4 variables. The x-axis variance, the y-axis energy, the size of the dots is loudness and the color is the mode.It points out some difference between the classical songs and the newer songs. 
+It's interesting to see that the the values of the features of the classical songs are more clustered, while the ones of newer songs are more spread out. A possible explanation could be the fact that the original classical songs all are all in the same genre; classical music. The playlist of the inspired newer songs, on the other hand, contains more genres, like pop, hiphop and jazz. 
+</br>
+
+
+Because of the different scale, loudness isn't showed in the overview graph on the previous page, but it's an interesting feature, so I used a different graph to show this. The histogram of the loudness feature shows a clear distinction in values between the two playlists. The newer songs are a lot louder.
+
+
+
+
+### Compairing two songs with two self-similarity matrices {data-commentary-width=400}
+
+```{r, echo=FALSE}
+Air_on_a_G_string <-
+  get_tidy_audio_analysis("0mD1a7haZKdX9I0oPywrMb") %>% # Change URI. 0AQqrtK1pULuwZUXhwaaDz
+  compmus_align(bars, segments) %>%                     # Change `bars`
+  select(bars) %>%                                      #   in all three
+  unnest(bars) %>%                                      #   of these lines.
+  mutate(
+    pitches =
+      map(segments,
+        compmus_summarise, pitches,
+        method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  ) %>%
+  mutate(
+    timbre =
+      map(segments,
+        compmus_summarise, timbre,
+        method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  )
+```
+
+```{r, echo=FALSE}
+fur_elise <-
+  get_tidy_audio_analysis("6MQAB3vorg90FA3tQpbYXK") %>% # Change URI.
+  compmus_align(bars, segments) %>%                     # Change `bars`
+  select(bars) %>%                                      #   in all three
+  unnest(bars) %>%                                      #   of these lines.
+  mutate(
+    pitches =
+      map(segments,
+        compmus_summarise, pitches,
+        method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  ) %>%
+  mutate(
+    timbre =
+      map(segments,
+        compmus_summarise, timbre,
+        method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  )
+```
+
+```{r, echo=FALSE}
+Air_on_a_G_string_timbre <-
+  Air_on_a_G_string %>%
+    compmus_self_similarity(timbre, "cosine") %>% 
+    ggplot(
+      aes(
+        x = xstart + xduration / 2,
+        width = xduration,
+        y = ystart + yduration / 2,
+        height = yduration,
+        fill = d
+      )
+    ) +
+    geom_tile() +
+    coord_fixed() +
+    scale_fill_viridis_c(guide = "none") +
+    theme_classic() +
+    labs(x = NULL, y = "Timbre") +
+    scale_x_continuous(
+      breaks = c(20, 61, 82, 123, 145, 186, 208),
+      labels =
+        c("Verse",
+          "Chorus",
+          "Verse",
+          "Chorus",
+          "Bridge",
+          "Verse",
+          "Chorus"
+        ),
+    ) +
+  theme(
+        axis.text.x = element_text(angle=90, hjust="1")
+  )
+```
+
+```{r, echo=FALSE}
+Air_on_a_G_string_chroma <-
+  Air_on_a_G_string %>%
+    compmus_self_similarity(pitches, "angular") %>% 
+    ggplot(
+      aes(
+        x = xstart + xduration / 2,
+        width = xduration,
+        y = ystart + yduration / 2,
+        height = yduration,
+        fill = d
+      )
+    ) +
+    geom_tile() +
+    coord_fixed() +
+    scale_fill_viridis_c(guide = "none") +
+    theme_classic() +
+    labs(x = NULL, y = "Chroma",  title = "Air on a G_string") +
+     theme(plot.title = element_text(hjust = 0.5))
+```
+
+```{r, echo=FALSE}
+fur_elise_timbre <-
+  fur_elise %>%
+    compmus_self_similarity(timbre, "cosine") %>% 
+    ggplot(
+      aes(
+        x = xstart + xduration / 2,
+        width = xduration,
+        y = ystart + yduration / 2,
+        height = yduration,
+        fill = d
+      )
+    ) +
+    geom_tile() +
+    coord_fixed() +
+    scale_fill_viridis_c(guide = "none") +
+    theme_classic() +
+    labs(x = NULL, y = NULL) +
+    theme(plot.title = element_text(hjust = 0.5)) +
+      scale_x_continuous(
+      breaks = c(0, 50, 78, 130, 157, 207, 233),
+      labels =
+        c("Verse",
+          "Chorus",
+          "Verse",
+          "Chorus",
+          "Bridge",
+          "Chorus",
+          "Outro"
+        ),
+    ) +
+  theme(
+        axis.text.x = element_text(angle=90, hjust="1")
+  )
+```
+
+```{r, echo=FALSE}
+fur_elise_chroma <-
+  fur_elise %>%
+    compmus_self_similarity(pitches, "cosine") %>% 
+    ggplot(
+      aes(
+        x = xstart + xduration / 2,
+        width = xduration,
+        y = ystart + yduration / 2,
+        height = yduration,
+        fill = d
+      )
+    ) +
+    geom_tile() +
+    coord_fixed() +
+    scale_fill_viridis_c(guide = "none") +
+    theme_classic() +
+    labs(x = NULL, y = NULL, title = "Fur Elise") +
+     theme(plot.title = element_text(hjust = 0.5))
 ```
 
 
+```{r, echo=FALSE}
+ggarrange(Air_on_a_G_string_chroma,fur_elise_chroma, Air_on_a_G_string_timbre, fur_elise_timbre,  ncol = 2, nrow = 2)
+```
 
-### tempogram
+---
 
-Still trying to fix this. My computer can't run the code of the tempograms because it keeps running forever.
+The self-similarity matrices are an interesting tool for this corpus. By making to similarity matrices you can compair the song that is inspired by classical songs and the classicals songs itself. I did this for the songs 'all by myself' - Eric Carmen and the song that is it's source of inspiration 'Piano Concerto No. 2 in C minor' - Sergei Rachmaninoff. 
+You can see that the similiarity matrices do correspond and that the patterns look like each other. That looks like they have the same repetitions. 'All by myself' is a song in the corpus that has clear influences of Piano Concerto No. 2 in C minor. So that explains why the two self-similarity matrices look like each other.
 
-
-
-### Some new visualizations: chordograms. Comparison of the inspired newer songs and the classical pieces
+### Some new visualizations: chordograms. Comparison of the inspired newer songs and the classical pieces {data-commentary-width=400}
+<div style="max-width:600px; margin: 0 auto;"> 
 
 ```{r, echo=FALSE, include=FALSE}
 circshift <- function(v, n) {
@@ -266,7 +626,7 @@ grace_kelly <-
   )
 ```
 
-```{r}
+```{r, echo=FALSE}
 grace_kelly %>% 
   compmus_match_pitch_template(
     key_templates,         # Change to chord_templates if descired
@@ -282,10 +642,9 @@ grace_kelly %>%
   labs(x = "Time (s)", y = "")
 ```
 
-I compaired two song of the corpus using chordograms. The first chordogram is a visualization of 'My Reverie' by Ella Fitzgerald. This song contains some clear repetitions. The second chrodogram is a visualization of the clasical song that inspired Ella Fitzgerald, named 'Rêverie' by Claude Debussy. An interesting observation is that have some clear similarities. Although Debussy's Rêverie is bit more stretched out, you can spot the same pattern. This is also something that you can hear back if you listen to the two songs. The lighter/yelllowe parts in the middle and in the end are in both pieces audible. Both the songs sound louder, but in a different way. In Fitzgerald's song increases sound her voice and in Debussy's song increases the sound of the instruments. 
 
 
-#### chordogram 'Rêverie' - Claude Debussy
+#### chordogram 'Rêverie' - Claude Debussy 
 
 ```{r, echo=FALSE, include=FALSE}
 twee <-
@@ -302,7 +661,7 @@ twee <-
   )
 ```
 
-```{r}
+```{r, echo=FALSE}
 twee %>% 
   compmus_match_pitch_template(
     key_templates,         # Change to chord_templates if descired
@@ -317,9 +676,103 @@ twee %>%
   theme_minimal() +
   labs(x = "Time (s)", y = "")
 ```
+</div>
+
+---
+
+<div style="max-width:600px; margin: 0 auto;">
+<h2> chromachrom comparisment </h2>
+
+I compaired two song of the corpus using chordograms. The first chordogram is a visualization of 'My Reverie' by Ella Fitzgerald. This song contains some clear repetitions. The second chrodogram is a visualization of the clasical song that inspired Ella Fitzgerald, named 'Rêverie' by Claude Debussy. An interesting observation is that have some clear similarities. Although Debussy's Rêverie is bit more stretched out, you can spot the same pattern. This is also something that you can hear back if you listen to the two songs. The lighter/yelllowe parts in the middle and in the end are in both pieces audible. Both the songs sound louder, but in a different way. In Fitzgerald's song increases sound her voice and in Debussy's song increases the sound of the instruments. 
+
+</div>
 
 
-### Key distribution 
+### DTW {data-commentary-width=500}
+<div style="max-width:600px; margin: 0 auto;"> 
+
+```{r, echo=FALSE}
+rev1 <- 
+  get_tidy_audio_analysis('1yOwaMlgQUfbPqsrsrVJvQ') %>% 
+  select(segments) %>% unnest(segments) %>% 
+  select(start, duration, pitches)
+rev2 <- 
+  get_tidy_audio_analysis('086sjLPEqdKBgTxbTeCLCv') %>% 
+  select(segments) %>% unnest(segments) %>% 
+  select(start, duration, pitches)
+plotje <- compmus_long_distance(
+  rev1 %>% mutate(pitches = map(pitches, compmus_normalise, 'chebyshev')),
+  rev2 %>% mutate(pitches = map(pitches, compmus_normalise, 'chebyshev')),
+  feature = pitches,
+  method = 'euclidean') %>% 
+  ggplot(
+    aes(
+      x = xstart + xduration / 2, 
+      width = xduration,
+      y = ystart + yduration / 2,
+      height = yduration,
+      fill = d)) + 
+  geom_tile() +
+  scale_fill_continuous(type = 'viridis', guide = 'none') +
+  labs(x = 'Rev1', y = 'Rev2') +
+  theme_minimal()
+plotje
+#086sjLPEqdKBgTxbTeCLCv
+```
+</div>
+
+---
+
+tekstje
+
+#### DTW (dynamic timewarping) 
+
+1iXG259LyleO8AJJCbdm7G
+5FiBzGgY8zYSdWN7hWfVz2
+
+<div style="background-color:black">
+<iframe src="https://open.spotify.com/embed/track/1yOwaMlgQUfbPqsrsrVJvQ" width="582" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+</div>
+
+
+###  Histogram of tempi {data-commentary-width=400}
+<div style="max-width:600px; margin: 0 auto;"> 
+
+#### tempo count
+
+```{r,echo=FALSE}
+hist1 <- ggplot(data = newer_and_classical, mapping = aes(x = tempo)) + 
+  geom_histogram(aes(fill = category), position="dodge") +
+  theme_minimal() +
+  ggtitle("the inspired newer songs and the original classical songs") +
+  theme(legend.position="none")
+
+hist3 <- ggplot(data = newer_and_classical, mapping = aes(x = tempo, color = category)) + 
+  geom_density(alpha=0) +
+  theme_minimal() +
+  ggtitle("the inspired newer songs and the original classical songs")
+
+hist1
+```
+
+
+
+
+#### tempo density
+
+
+```{r, echo=FALSE}
+hist3
+```
+</div>
+
+---
+
+The tempi of the classical songs vary a lot. It's almost an evenly distributed graph, only a few more slower songs than faster songs. The different tempi for the inspired newer songs are closer to each other, less distributed. There is a peak for the newer songs around 120 bmp.
+
+
+### Key distribution {data-commentary-width=400}
+<div style="max-width:600px; margin: 0 auto;"> 
 
 #### graph of key distribution newer songs and classical songs
 ```{r, echo=FALSE, include=FALSE}
@@ -337,7 +790,7 @@ newer_and_classical <-
 sample_size_portfolio = newer_and_classical %>% group_by(playlist_name) %>% summarize(num=n())
 ```
 
-```{r}
+```{r, echo=FALSE}
 newer_and_classical$key <- as.factor(newer_and_classical$key)
 keys <- ggplot(newer_and_classical, aes(x=playlist_name, fill=key)) +
   geom_bar(position = 'fill', width=0.5) + ylab("Proportion") + xlab('Playlist name')
@@ -372,7 +825,7 @@ combi <-
 ```
 
 
-```{r}
+```{r, echo=FALSE}
 combi %>%
   mutate(
     sections =
@@ -404,236 +857,22 @@ combi %>%
     alpha = "Volume (dBFS)"
   )
 ```
+</div>
+---
 
-
-
-### Compairing two songs with two self-similarity matrices
-
-```{r, echo=FALSE, include=FALSE}
-bzt <-
-  get_tidy_audio_analysis("0AQqrtK1pULuwZUXhwaaDz") %>% # Change URI.
-  compmus_align(bars, segments) %>%                     # Change `bars`
-  select(bars) %>%                                      #   in all three
-  unnest(bars) %>%                                      #   of these lines.
-  mutate(
-    pitches =
-      map(segments,
-        compmus_summarise, pitches,
-        method = "rms", norm = "euclidean"              # Change summary & norm.
-      )
-  ) %>%
-  mutate(
-    timbre =
-      map(segments,
-        compmus_summarise, timbre,
-        method = "rms", norm = "euclidean"              # Change summary & norm.
-      )
-  )
-```
-
-```{r, echo=FALSE, include=FALSE}
-bzt %>%
-  compmus_gather_timbre() %>%
-  ggplot(
-    aes(
-      x = start + duration / 2,
-      width = duration,
-      y = basis,
-      fill = value
-    )
-  ) +
-  geom_tile() +
-  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
-  scale_fill_viridis_c() +                              
-  theme_classic()
-```
-
-
-```{r}
-bzt %>%
-  compmus_self_similarity(timbre, "cosine") %>% 
-  ggplot(
-    aes(
-      x = xstart + xduration / 2,
-      width = xduration,
-      y = ystart + yduration / 2,
-      height = yduration,
-      fill = d
-    )
-  ) +
-  geom_tile() +
-  coord_fixed() +
-  scale_fill_viridis_c(guide = "none") +
-  theme_classic() +
-  labs(x = "", y = "")
-```
-
-***
-
-The self-similarity matrices are an interesting tool for this corpus. By making to similarity matrices you can compair the song that is inspired by classical songs and the classicals songs itself. I did this for the songs 'all by myself' - Eric Carmen and the song that is it's source of inspiration 'Piano Concerto No. 2 in C minor' - Sergei Rachmaninoff. 
-You can see that the similiarity matrices do correspond and that the patterns look like each other. That looks like they have the same repetitions. 'All by myself' is a song in the corpus that has clear influences of Piano Concerto No. 2 in C minor. So that explains why the two self-similarity matrices look like each other.
+tekstje
 
 
 
 
 
 
+### Cepstrograms {data-commentary-width=400}
+<div style="max-width:600px; margin: 0 auto;"> 
 
 
 
-
-### How do the inspired newer songs relate to the classical songs?
-
-```{r, echo=FALSE}
-project <-
-  bind_rows(
-    classical %>% mutate(category = "Classical"),
-    new %>% mutate(category = "New")
-  )
-```
-
-```{r, echo=FALSE}
-plot_loudness <- project %>%
-  ggplot(aes(x = loudness, fill = category)) +
-  geom_histogram(binwidth = 0.5, position = "dodge")
-
-ggplotly(plot_loudness)
-
-
-plot_danceability <- project %>%
-  ggplot(aes(x = danceability, fill = category)) +
-  geom_histogram(binwidth = 0.1, position = "dodge")
-
-ggplotly(plot_danceability)
-
-```
-
-***
-
-I made some simple but clear histograms of the loudness and danceability of the classical en new songs, In the histograms you see the clear diference in the distributions of the two categories, classical songs and the new songs that are basted on the classical songs. The new songs are signifant louder than the classical songs. The danceability is also higher for the new songs.
-
-
-### Inspired but apparently with a lot more energy and loudness
-
-
-```{r, echo=FALSE}
-plot_all <- project %>%                    # Start with awards.
-  mutate(
-    mode = ifelse(mode == 0, "Minor", "Major")
-  ) %>%
-  ggplot(                     # Set up the plot.
-    aes(
-      x = valence,
-      y = energy,
-      size = loudness,
-      colour = mode
-    )
-  ) +
-  geom_point() +              # Scatter plot.
-  geom_rug(size = 0.1) +      # Add 'fringes' to show data distribution.
-  geom_text(                  # Add text labels from above.
-    aes(
-      x = valence,
-      y = energy,
-      label = label
-    ),
-    data = 
-      tibble(
-        label = c("Clair de Lune, L.32 ", "Say You'll Go"),
-        category = c("Classical", "New"),
-        valence = c(0.090, 0.123),
-        energy = c(0.101, 0.967)
-      ),
-    colour = "red",         # Override colour (not mode here).
-    size = 3,                 # Override size (not loudness here).
-    hjust = "left",           # Align left side of label with the point.
-    vjust = "bottom",         # Align bottom of label with the point.
-    nudge_x = -0.05,          # Nudge the label slightly left.
-    nudge_y = 0.02            # Nudge the label slightly up.
-  ) +
-  facet_wrap(~category) +     # Separate charts per playlist.
-  scale_x_continuous(         # Fine-tune the x axis.
-    limits = c(0, 1),
-    breaks = c(0, 0.50, 1),   # Use grid-lines for quadrants only.
-    minor_breaks = NULL       # Remove 'minor' grid-lines.
-  ) +
-  scale_y_continuous(         # Fine-tune the y axis in the same way.
-    limits = c(0, 1),
-    breaks = c(0, 0.50, 1),
-    minor_breaks = NULL
-  ) +
-  scale_colour_brewer(        # Use the Color Brewer to choose a palette.
-    type = "qual",            # Qualitative set.
-    palette = "Paired"        # Name of the palette is 'Paired'.
-  ) +
-  scale_size_continuous(      # Fine-tune the sizes of each point.
-    trans = "exp",            # Use an exp transformation to emphasise loud.
-    guide = "none"            # Remove the legend for size.
-  ) +
-  theme_economist() +             # Use a simpler theme.
-  labs(                       # Make the titles nice.
-    x = "valence",
-    y = "energy",
-    colour = "Mode"
-  )
-
-ggplotly(plot_all)
-
-```
-
-***
-
-This plot shows 4 variables. The x-axis variance, the y-axis energy, the size of the dots is loudness and the color is the mode.It points out some difference between the classical songs and the newer songs. Especially the difference in Valence and the difference energy are remarkable. 
-
-
-
-### Chromagram
-
-```{r, echo=FALSE, include=FALSE}
-because <-
-  get_tidy_audio_analysis("6DwN81QZmeuwwH4cGssrjl") %>%
-  select(segments) %>%
-  unnest(segments) %>%
-  select(start, duration, pitches)
-
-sonata <- 
-  get_tidy_audio_analysis("3eLlW0GegkXy3o92t51xaJ") %>%
-  select(segments) %>%
-  unnest(segments) %>%
-  select(start, duration, pitches)
-
-```
-
-
-```{r}
-compmus_long_distance(
-  because %>% mutate(pitches = map(pitches, compmus_normalise, "manhattan")),
-  sonata %>% mutate(pitches = map(pitches, compmus_normalise, "manhattan")),
-  feature = pitches,
-  method = "manhattan"
-) %>%
-  ggplot(
-    aes(
-      x = xstart + xduration / 2,
-      width = xduration,
-      y = ystart + yduration / 2,
-      height = yduration,
-      fill = d
-    )
-  ) +
-  geom_tile() +
-  coord_equal() +
-  labs(x = "because", y = "sonata") +
-  theme_minimal() +
-  scale_fill_viridis_c(guide = NULL)
-```
-
-### Cepstrograms
-
-
-
-
-```{r}
+```{r,echo=FALSE, include=FALSE}
 all <-
   get_tidy_audio_analysis("4rrrn8OLrttq7r9RgNXalU") %>% # Change URI.
   compmus_align(bars, segments) %>%                     # Change `bars`
@@ -682,7 +921,7 @@ wood <-
 ```
 
 
-```{r}
+```{r, echo=FALSE}
 
 wood %>%
   mutate(pitches = map(pitches, compmus_normalise, "euclidean")) %>%
@@ -700,8 +939,20 @@ wood %>%
   theme_minimal() +
   scale_fill_viridis_c()
 ```
+</div>
+
+---
+
+tekstje
 
 
+### classification{data-commentary-width=400}
+<div style="max-width:600px; margin: 0 auto;"> 
 
+![Classification](/Users/julie/Pictures/forest.png)
+</div>
 
+---
+
+The overall precision was 71
 
