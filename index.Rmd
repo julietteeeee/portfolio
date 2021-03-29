@@ -240,15 +240,15 @@ ggplotly(plot, tooltip = c("text"))
 In this graph you can have a look at the different features  of the inspired songs and the features of the original songs. The lines in the plot show if there is a decrease or increase in value of the different features. A <span style='color:#F9D731'>yellow-ish line</span> means that from the inspired newer song to the original classical song, there is an increase of the feature. A <span style='color:#2C9CCB'>blue-ish line</span> means that from inspired newer song to the original classical song, there is an decrease of the feature. 
 
 
-<b> difference of the features (highest differences on top) </b>
-inspired newer songs <div class="arrow-right"></div> original classical songs 
-- instrumentalness:0.527
-- acousticness: 0.521
-- energy: -0.428
-- valence: -0.210
-- danceability: -0.170
-- speechiness: 0.129
-- liveness: -0.039
+<b> difference of the features </b> (highest differences on top)  </br>
+inspired newer songs -> original classical songs 
+- instrumentalness: 0.527 </br>
+- acousticness: 0.521 </br>
+- energy: -0.428 </br>
+- valence: -0.210 </br>
+- danceability: -0.170 </br>
+- speechiness: 0.129 </br>
+- liveness: -0.039 </br>
 
 
 
@@ -514,7 +514,7 @@ ggarrange(Air_on_a_G_string_chroma,fur_elise_chroma, Air_on_a_G_string_timbre, f
 The self-similarity matrices are an interesting tool for this corpus. By making to similarity matrices you can compair the song that is inspired by classical songs and the classicals songs itself. I did this for the songs 'all by myself' - Eric Carmen and the song that is it's source of inspiration 'Piano Concerto No. 2 in C minor' - Sergei Rachmaninoff. 
 You can see that the similiarity matrices do correspond and that the patterns look like each other. That looks like they have the same repetitions. 'All by myself' is a song in the corpus that has clear influences of Piano Concerto No. 2 in C minor. So that explains why the two self-similarity matrices look like each other.
 
-### Some new visualizations: chordograms. Comparison of the inspired newer songs and the classical pieces {data-commentary-width=400}
+### Some new visualizations: chordograms. Comparison of the a inspired newer songs and it's classical other half {data-commentary-width=400}
 <div style="max-width:600px; margin: 0 auto;"> 
 
 ```{r, echo=FALSE, include=FALSE}
@@ -681,7 +681,7 @@ twee %>%
 ---
 
 <div style="max-width:600px; margin: 0 auto;">
-<h2> chromachrom comparisment </h2>
+#### chromachrom comparisment
 
 I compaired two song of the corpus using chordograms. The first chordogram is a visualization of 'My Reverie' by Ella Fitzgerald. This song contains some clear repetitions. The second chrodogram is a visualization of the clasical song that inspired Ella Fitzgerald, named 'Rêverie' by Claude Debussy. An interesting observation is that have some clear similarities. Although Debussy's Rêverie is bit more stretched out, you can spot the same pattern. This is also something that you can hear back if you listen to the two songs. The lighter/yelllowe parts in the middle and in the end are in both pieces audible. Both the songs sound louder, but in a different way. In Fitzgerald's song increases sound her voice and in Debussy's song increases the sound of the instruments. 
 
