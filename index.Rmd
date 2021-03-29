@@ -1,7 +1,7 @@
 ---
-title: "Music inspired by classical songs"
+title: "Music inspired by classical songs - Portfolio Computational Musicology"
 author: "Juliette de Waal"
-date: "9 februari 2021"
+date: "february / march 2021"
 output: 
   flexdashboard::flex_dashboard:
     storyboard: true
@@ -82,16 +82,25 @@ new %>%
   )
 ```
 <div style="max-width:600px; margin: 0 auto;">
-<h2> Portfolio for the course Computational Musicology </h2>
+<h2> Music inspired by classical songs </h2>
 <br/>
 
-<front size = "11"> Some time ago I heard a song named 'a Fifth of Beethoven' by Walter Murphy,<br/>  and I really liked it. It is a disco instrumental song based on Beethoven's Symphony No. 5.<br/>  I thought using famous classical music pieces to create new songs of another genre is a really cool concept. So I did some research and discovered that there are many more famous songs that are based <br/>  and inspired on a classical piece of music, also songs I know for a long time <br/> but never knew that they have a classical origin.<br/>
+Some time ago I heard a song named 'a Fifth of Beethoven' by Walter Murphy and I really liked it. </br> It is a disco instrumental song based on Beethoven's Symphony No. 5. I thought using famous classical music pieces to create new songs of another genre is a really cool concept. So I did some research and discovered that there are many more famous songs that are based and inspired on a classical piece of music, also songs I know for a long time but never knew that they have a classical origin.<br/>
+
+
 My corpus includes classical pieces and their linked new songs. <br/> I have found 25 pairs, so 50 songs in total.<br/>
-I think that this corpus makes really interesting comparisments possible, on different levels.<br/>
-For example between the songs based on the classical songs. <br/> What are the differences and similarities between these songs? <br/> Is the classical input used in the same way? Is there an common genre?<br/>
-But of course exploring relation between the song based on a classic song and the original classical song itself is really interesting. <br/> To what extent do you see the original classical back in the new songs? In which way is the original song adapted in de new song? Which changes are made? Maybe the tempo changed or other instruments are used.<br/>
-There are pairs of tracks in the corpus, like 'I can' – Nas/'Für Elise' -Beethoven and 'A fifth of Beethoven'-Woody/ Beethoven's Fifth Symphony- Beethoven, <br/> in which the relation with the origin classical song is very obvious. But there are also pairs in the corpus in which the original songs are more subtly included, like 'Grace Kelly'- Mika /  'Largo Al Factotum'- Rossini. <br/>
-It's important that I define my research a bit more, but I think this is a really interesting and fun corpus to explore with enough possibilities. </front>
+
+I think that this corpus makes really interesting comparison possible, on different levels.<br/>
+For example between the songs based on the classical songs. <br/>
+What are the differences and similarities between these songs? <br/> Is the classical input used in the same way? Is there an common genre?<br/>
+
+But of course exploring relation between the song based on a classic song and the original classical song itself is really interesting. <br/> To what extent do you see the original classical back in the new songs? In which way is the original song adapted in de new song? Which changes are made? Maybe the tempo changed or other instruments are used.
+
+There are pairs of tracks in the corpus, like 'I can' – Nas/'Für Elise' -Beethoven and 'A fifth of Beethoven'-Woody/ Beethoven's Fifth Symphony- Beethoven, in which the relation with the origin classical song is very obvious. But there are also pairs in the corpus in which the original songs are more subtly included, like 'Grace Kelly'- Mika /  'Largo Al Factotum'- Rossini. 
+
+The corpus isn't perfect. It would be better if the playlist of the inspired newer songs would also inlcude only one genre instead of all different kinds. I that was the case later conclusions would be more reliable than now, because the likelihood that other factors play a role would be smaller. It's good to be aware of that while reading portfolio.
+Nevertheless I think it's an interesting corpus to do research on. 
+
 </div>
 
 ---
@@ -104,7 +113,7 @@ It's important that I define my research a bit more, but I think this is a reall
 |---------------------------:|:-------------------------------------|
 | I can - Nas | Fur Elise - Beethoven | 
 | A fifth of Beethoven - Walter Murphy | Symphony No, 5 in C minor - Beethoven |
-| Because - The Beatles | Sonata No. 14 "Moonlight" in C sharp |
+| Because - The Beatles | Sonata No. 14 "Moonlight" in C sharp - Beethoven|
 | Can't Help falling in Love - Elvis Presley | Martini: Plaisir d'amour - Jean-Paul-Egide Martini | 
 | All by myself - Eric Carmen | Piano Concerto No. 2 in C minor - Sergei Rachmaninoff |
 | The Globalist - Muse | Nimord From Enigma Variations - Edward Elgar  |
@@ -156,7 +165,7 @@ project <-
 
 
 
-### How do the inspired newer songs relate to the classical songs? {data-commentary-width=500}
+### How do the inspired newer songs <b>relate</b> to the classical songs? {data-commentary-width=500}
 <div style="max-width:600px; margin: 0 auto; color=blue;"> 
 
 
@@ -233,7 +242,7 @@ ggplotly(plot, tooltip = c("text"))
 
 --- 
 
-#### A first look on the spotify API features of the two playlists
+#### A first look on the <b>spotify API features</b> of the two playlists
 
 <div>
 
@@ -409,18 +418,6 @@ Air_on_a_G_string_timbre <-
     scale_fill_viridis_c(guide = "none") +
     theme_classic() +
     labs(x = NULL, y = "Timbre") +
-    scale_x_continuous(
-      breaks = c(20, 61, 82, 123, 145, 186, 208),
-      labels =
-        c("Verse",
-          "Chorus",
-          "Verse",
-          "Chorus",
-          "Bridge",
-          "Verse",
-          "Chorus"
-        ),
-    ) +
   theme(
         axis.text.x = element_text(angle=90, hjust="1")
   )
@@ -466,18 +463,6 @@ fur_elise_timbre <-
     theme_classic() +
     labs(x = NULL, y = NULL) +
     theme(plot.title = element_text(hjust = 0.5)) +
-      scale_x_continuous(
-      breaks = c(0, 50, 78, 130, 157, 207, 233),
-      labels =
-        c("Verse",
-          "Chorus",
-          "Verse",
-          "Chorus",
-          "Bridge",
-          "Chorus",
-          "Outro"
-        ),
-    ) +
   theme(
         axis.text.x = element_text(angle=90, hjust="1")
   )
@@ -511,10 +496,24 @@ ggarrange(Air_on_a_G_string_chroma,fur_elise_chroma, Air_on_a_G_string_timbre, f
 
 ---
 
-The self-similarity matrices are an interesting tool for this corpus. By making to similarity matrices you can compair the song that is inspired by classical songs and the classicals songs itself. I did this for the songs 'all by myself' - Eric Carmen and the song that is it's source of inspiration 'Piano Concerto No. 2 in C minor' - Sergei Rachmaninoff. 
-You can see that the similiarity matrices do correspond and that the patterns look like each other. That looks like they have the same repetitions. 'All by myself' is a song in the corpus that has clear influences of Piano Concerto No. 2 in C minor. So that explains why the two self-similarity matrices look like each other.
+#### self-similarity matrices of Air on a G string and Fur Elise
 
-### Some new visualizations: chordograms. Comparison of the a inspired newer songs and it's classical other half {data-commentary-width=400}
+<div>
+In the graphs on the left you see the self-similarity matrices of Air on a G string by Bach and Fur Elise by Beethoven. Both Chroma-features as Timbre-Features.
+
+<b>In these SSM it's visible that:</b>
+
+- The paths parallel to the diagonal shows that there is in both song <b>repetition</b>, especially in fur Elise. If you listen to Fur Elise you can notice many repetition parts. 
+
+- The self-similarity matrices of Air on a G string is less clear
+
+- The blocks in Fur Elise show that the clear <b>homogeneity</b> Fur Elise.
+
+- The point where the corners of the blocks touch is the part where there appears a turning point in the song. This is calles <b>novelty</b>
+
+
+
+### <b>Key-graphs</b>. clear comparison of the a inspired newer songs and it's classical other half {data-commentary-width=400}
 <div style="max-width:600px; margin: 0 auto;"> 
 
 ```{r, echo=FALSE, include=FALSE}
@@ -609,7 +608,7 @@ key_templates <-
 
 
 
-#### chordogram 'Reverie' - Ella Fitzgerald
+#### key-graph 'Reverie' - Ella Fitzgerald
 
 ```{r, echo=FALSE, include=FALSE}
 grace_kelly <-
@@ -644,7 +643,7 @@ grace_kelly %>%
 
 
 
-#### chordogram 'Rêverie' - Claude Debussy 
+#### key-graph 'Rêverie' - Claude Debussy 
 
 ```{r, echo=FALSE, include=FALSE}
 twee <-
@@ -681,14 +680,17 @@ twee %>%
 ---
 
 <div style="max-width:600px; margin: 0 auto;">
-#### chromachrom comparisment
+#### key-graph comparisment
 
-I compaired two song of the corpus using chordograms. The first chordogram is a visualization of 'My Reverie' by Ella Fitzgerald. This song contains some clear repetitions. The second chrodogram is a visualization of the clasical song that inspired Ella Fitzgerald, named 'Rêverie' by Claude Debussy. An interesting observation is that have some clear similarities. Although Debussy's Rêverie is bit more stretched out, you can spot the same pattern. This is also something that you can hear back if you listen to the two songs. The lighter/yelllowe parts in the middle and in the end are in both pieces audible. Both the songs sound louder, but in a different way. In Fitzgerald's song increases sound her voice and in Debussy's song increases the sound of the instruments. 
+I compared two song of the corpus using <b>key-graphs</b>. The first graph is a visualization of 'My Reverie' by Ella Fitzgerald. This song contains some clear repetitions. The second graph is a visualization of the classical song that inspired Ella Fitzgerald, named 'Rêverie' by Claude Debussy. 
+</br>
+
+An interesting observation is that they have some clear similarities. Although Debussy's Rêverie is bit more stretched out, you can spot the same pattern. This is also something that you can hear back if you listen to the two songs. The <span style='color:#F9D731'>lighter </span>  parts in the middle and in the end are in both pieces audible. Both of the songs sound louder, but in a different way. In Fitzgerald's song increases the sound other voice and in Debussy's song increases the sound of the instruments. 
 
 </div>
 
 
-### DTW {data-commentary-width=500}
+###  Are there enough similairities between the original song and the inspired to form a warping path? Let find out using <b>DTW (Dynamic Time Warping)</b> DTW {data-commentary-width=500}
 <div style="max-width:600px; margin: 0 auto;"> 
 
 ```{r, echo=FALSE}
@@ -722,20 +724,24 @@ plotje
 </div>
 
 ---
+<div>
+#### To much deviation for a warping path?
 
-tekstje
+<object data="https://open.spotify.com/embed/track/your_URI" width="280" height="140">
+    <embed src="https://open.spotify.com/embed/track/your_URI" width="280" height="140"></embed>
+</object>
 
-#### DTW (dynamic timewarping) 
 
-1iXG259LyleO8AJJCbdm7G
-5FiBzGgY8zYSdWN7hWfVz2
+This chromagram is made using the Dynamic Time-Warping technique (DTW), using Manhattan normalization and Aitchison distance to align both versions. DTW is a great help if you want to compare various performances. You can see by the longer x-axis that the Bach Collegium Japan plays much slower, resulting in a rectangular chromagram.
 
-<div style="background-color:black">
-<iframe src="https://open.spotify.com/embed/track/1yOwaMlgQUfbPqsrsrVJvQ" width="582" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+My expectations were high for the DTW because the <b>Dynamic Time-Warping technique (DTW)</b> is a good tool to compare different performances. In a way, you could see the inspired newer songs as a different performance of the original song, so this gave high hopes. 
+
+Unfortunately it didn't turn out to work as good as expected. After trying all the possible normalization and distances on different songs of the corpus, I could conclude that this technique wasn't working for my corpus. 
+
+So I started thinking of reasons why it failed. 
 </div>
 
-
-###  Histogram of tempi {data-commentary-width=400}
+###  The original classical song playlist got all the tempi values! Showing the tempo distribution with <b> histograms of tempi</b> {data-commentary-width=400}
 <div style="max-width:600px; margin: 0 auto;"> 
 
 #### tempo count
@@ -768,162 +774,33 @@ hist3
 
 ---
 
-The tempi of the classical songs vary a lot. It's almost an evenly distributed graph, only a few more slower songs than faster songs. The different tempi for the inspired newer songs are closer to each other, less distributed. There is a peak for the newer songs around 120 bmp.
+#### Tempi of the two playlists
+
+As you can see in the histogram, the tempi of the classical songs vary a lot. It's almost an evenly distributed graph. There are only a few more slower songs than faster songs. </br> 
+The different tempi of the inspired newer songs are closer to each other, less distributed. There is a peak for the newer songs around 120 bmp.
+
+This is interesting because you could expect it the other way around. The playlist of the original classical songs is only one genre, while the playlist of the inspired newer songs contains songs of many different genres. First I though this could affect the distribution of the tempi of the songs, in a way that the playlist with the inspired newer songs would be spread out a lot, but it turns out to be the opposite. Most of the inspired newer songs got a tempo around 120BMP, while the distribution of the classical songs doesn't show a peak in the graph. Apparently classical music  is very versatile in the field of tempo!
 
 
-### Key distribution {data-commentary-width=400}
+### <b> Chromagram of pitches </b> giving some really clear similarities. Or not? {data-commentary-width=400}
 <div style="max-width:600px; margin: 0 auto;"> 
 
-#### graph of key distribution newer songs and classical songs
-```{r, echo=FALSE, include=FALSE}
-newer <- get_playlist_audio_features("", "3jqW2ItEMYCM3Pl5Fnj3Pu")
-classical <- get_playlist_audio_features("", "0UEGOBtALCL7RgScgDhUx1")
-```
+####  Sonata No. 14 "Moonlight" in C sharp - Beethoven and the inspired Because - The Beatles | |
 
 ```{r, echo=FALSE, include=FALSE}
-newer_and_classical <-
-  bind_rows(
-    newer %>% mutate(category = "Newer"),
-    classical %>% mutate(category = "Classical")
-  )
-# Sample size
-sample_size_portfolio = newer_and_classical %>% group_by(playlist_name) %>% summarize(num=n())
-```
-
-```{r, echo=FALSE}
-newer_and_classical$key <- as.factor(newer_and_classical$key)
-keys <- ggplot(newer_and_classical, aes(x=playlist_name, fill=key)) +
-  geom_bar(position = 'fill', width=0.5) + ylab("Proportion") + xlab('Playlist name')
-keys + 
-  theme(axis.text.x = element_text(angle=65, vjust=0.6)) + 
-  labs(title="Key distribution", 
-       xlab = 'Playlist name') 
-```
-
-
-#### Track-Level Summaries
-
-```{r, echo=FALSE, include=FALSE}
-new <-
-  get_playlist_audio_features(
-    "thesoundsofspotify",
-    "3jqW2ItEMYCM3Pl5Fnj3Pu"
-  ) %>%
-  slice(1:30) %>%
-  add_audio_analysis()
-old <-
-  get_playlist_audio_features(
-    "thesoundsofspotify",
-    "0UEGOBtALCL7RgScgDhUx1"
-  ) %>%
-  slice(1:30) %>%
-  add_audio_analysis()
-combi <-
-  new %>%
-  mutate(genre = "new") %>%
-  bind_rows(old %>% mutate(genre = "old"))
-```
-
-
-```{r, echo=FALSE}
-combi %>%
-  mutate(
-    sections =
-      map(
-        sections,                                    # sections or segments
-        summarise_at,
-        vars(tempo, loudness, duration),             # features of interest
-        list(section_mean = mean, section_sd = sd)   # aggregation functions
-      )
-  ) %>%
-  unnest(sections) %>%
-  ggplot(
-    aes(
-      x = tempo,
-      y = tempo_section_sd,
-      colour = genre,
-      alpha = loudness
-    )
-  ) +
-  geom_point(aes(size = duration / 60)) +
-  geom_rug() +
-  theme_minimal() +
-  ylim(0, 5) +
-  labs(
-    x = "Mean Tempo (bpm)",
-    y = "SD Tempo",
-    colour = "Genre",
-    size = "Duration (min)",
-    alpha = "Volume (dBFS)"
-  )
-```
-</div>
----
-
-tekstje
-
-
-
-
-
-
-### Cepstrograms {data-commentary-width=400}
-<div style="max-width:600px; margin: 0 auto;"> 
-
-
-
-```{r,echo=FALSE, include=FALSE}
-all <-
-  get_tidy_audio_analysis("4rrrn8OLrttq7r9RgNXalU") %>% # Change URI.
-  compmus_align(bars, segments) %>%                     # Change `bars`
-  select(bars) %>%                                      #   in all three
-  unnest(bars) %>%                                      #   of these lines.
-  mutate(
-    pitches =
-      map(segments,
-        compmus_summarise, pitches,
-        method = "rms", norm = "euclidean"              # Change summary & norm.
-      )
-  ) %>%
-  mutate(
-    timbre =
-      map(segments,
-        compmus_summarise, timbre,
-        method = "rms", norm = "euclidean"              # Change summary & norm.
-      )
-  )
-```
-
-```{r, echo=FALSE, include=FALSE}
-all%>%
-  compmus_gather_timbre() %>%
-  ggplot(
-    aes(
-      x = start + duration / 2,
-      width = duration,
-      y = basis,
-      fill = value
-    )
-  ) +
-  geom_tile() +
-  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
-  scale_fill_viridis_c() +                              
-  theme_classic()
-```
-
-
-```{r, echo=FALSE, include=FALSE}
-wood <-
-  get_tidy_audio_analysis("6DwN81QZmeuwwH4cGssrjl") %>%
+moonlight <-
+  get_tidy_audio_analysis("3DNRdudZ2SstnDCVKFdXxG") %>% 
   select(segments) %>%
   unnest(segments) %>%
   select(start, duration, pitches)
 ```
 
 
+
+
 ```{r, echo=FALSE}
 
-wood %>%
+moonlight %>%
   mutate(pitches = map(pitches, compmus_normalise, "euclidean")) %>%
   compmus_gather_chroma() %>% 
   ggplot(
@@ -939,20 +816,182 @@ wood %>%
   theme_minimal() +
   scale_fill_viridis_c()
 ```
+
+```{r, echo=FALSE, include=FALSE}
+because_cept <-
+  get_tidy_audio_analysis("1rxoyGj1QuPoVi8fOft1Kt") %>% 
+  select(segments) %>%
+  unnest(segments) %>%
+  select(start, duration, pitches)
+```
+
+
+```{r, echo=FALSE}
+
+because_cept %>%
+  mutate(pitches = map(pitches, compmus_normalise, "euclidean")) %>%
+  compmus_gather_chroma() %>% 
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = pitch_class,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  theme_minimal() +
+  scale_fill_viridis_c()
+```
+
+#### Prelude in E minor, Op. 28, No. 4 - Frederic Chopin and the inspired  Exit Music (For a Film) - Radiohead 
+
+
+```{r, echo=FALSE, include=FALSE}
+prelude <-
+  get_tidy_audio_analysis("1Xf4sNtMKc1xiUhuIPAUg2") %>% #3DNRdudZ2SstnDCVKFdXxG
+  select(segments) %>%
+  unnest(segments) %>%
+  select(start, duration, pitches)
+```
+
+
+```{r, echo=FALSE}
+
+prelude %>%
+  mutate(pitches = map(pitches, compmus_normalise, "euclidean")) %>%
+  compmus_gather_chroma() %>% 
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = pitch_class,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  theme_minimal() +
+  scale_fill_viridis_c()
+```
+
+```{r, echo=FALSE, include=FALSE}
+exit <-
+  get_tidy_audio_analysis("0z1o5L7HJx562xZSATcIpY") %>% #1rxoyGj1QuPoVi8fOft1Kt
+  select(segments) %>%
+  unnest(segments) %>%
+  select(start, duration, pitches)
+```
+
+
+```{r, echo=FALSE}
+
+exit %>%
+  mutate(pitches = map(pitches, compmus_normalise, "euclidean")) %>%
+  compmus_gather_chroma() %>% 
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = pitch_class,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  theme_minimal() +
+  scale_fill_viridis_c()
+```
+
+
 </div>
 
 ---
 
-tekstje
+#### Compairing pitches in Chromagrams
+
+On this page you can find 4 chromagrams. It is interesting to see that some original classical songs and its newer inspired version show really clear similarities while other duo's don't. Some duo's are played in the same pitch, while others are a few semitones lower or higher.
+
+- An example of similarities are the first two chomagrams: <b> Sonata No. 14 “Moonlight” in C sharp - Beethoven and the inspired Because - The Beatles </b>. It's played in C sharp (surprise! ;)), G sharp and B. 
+
+- An example of differences in pitches are the third and fourth chromagrams: <b>Prelude in E minor, Op. 28, No. 4 - Frederic Chopin and the inspired Exit Music (For a Film) - Radiohead </b>. Chopin plays the song in E minor, while Radiohead plays it in F sharp. 
+
+This isn't really weird, because it's possible to be inspired by a song, but change the pitches as well. But it;s interesting to see that some inspired songs also are influenced by the pitch, while other inspired songs change the pitch
 
 
-### classification{data-commentary-width=400}
+
+
+### <b>classification</b> using the random forest classifier{data-commentary-width=400}
 <div style="max-width:600px; margin: 0 auto;"> 
 
-![Classification](/Users/julie/Pictures/forest.png)
+#### classification with random forest
+
+![.](/Users/julie/Pictures/forest.png)
 </div>
 
 ---
 
-The overall precision was 71
+#### Random forest classifier
+
+ - First we optained the importance for each feauture, by training a <b>random forest classifier</b>. The <b>loudness</b> and <b>acousticness</b> turned out to be the best features to use. (this is in line with the largest differences between the features calculated in the first pages of the portfolio)
+ 
+- After classifying the two playlist we got an overall precision of 71%. So it did quiet a good job!
+
+### Different <b>conclusions</b> on different research levels. Overview of contribution and conclusion. {data-commentary-width=500}
+<div>
+
+#### Contribution and conclusion
+
+Of course I learned a lot about the Spotify API and all it’s possible techniques, but what 
+In previous courses of my study I learned extract information of large data sets . I did use these quantative research skills a lot and they were really useful for my research, but during this course I also learned to zoom in on specific datapoints (in this case individual songs) and apply more qualitatively research.
+
+So two levels of comparisments are made in this portfolio. 
+
+#### Interesting finding while comparing the original classical song with its inspired newer version.  
+
+The main findings: </br>
+
+- The differences and similarities between the classical song and its inspired song, really <b> differ per duo</b>. There is no spotify API technique that shows for <b> all </b> duo's similarities. </br>
+
+- Eventhough you the newer songs are inspired by the classical songs, there is too much deviation to find a warping path</br>
+
+- It's often hard to find the similarities between the classical song and its inspired newer song.
+
+
+You could see the large varity of duo's as a limitation, but the he fact that we can conclude that finding multiple similarities isn't that obvious and that there isn't <b> one </b> spotify API tool that works for <b> all </b> duo's similarities, also says something interesting about the corpus that I discovered during this course: </br> 
+<b> There are multible ways to incorporate a classical song into a newer inspired version, and these different ways can be shown by using different Spotify API techniques, like chordograms, histograms, self-similarity matrices and key-graphs.</b>
+
+#### Interesting finding while comparing the two playlist with each other.
+When comparing the playlist with classical songs with the playlist with new songs, I thought I mainly would find obvious differences, such as feature differences that appear if you compare classical songs with newer songs. But after applying a some spotify API techniques, I also started to notice that there is a big overall difference between the two playlists. 
+The songs of the classical playlist  appear to differ a lot from each other, compared to the newer songs that had more similarities. This was visible in the graphs. The values in the graphs of the classical songs were a lot <b>more spread out</b>. The newer songs, on the other hand, showed <b>clustering and peaks</b>. I though this is remarkable, because you could expect the classical songs to show more similarities, given that songs belong to the same genre.
+
+
+
+I really enjoyed making this portfolio. In the beginning I had some doubts if my corpus was well fitted for using the Spotify API. I had the idea that the Spotify API was mostly mend to be used on large scale, like multiple playlists with many songs. While the interesting part of this corpus, is more zoomed in, namely comparing the original classical song with its inspired newer version.  But during the course I found out that Spotify API contain all kind of functions, also many individually focussed techniques, like the chromagrams, key-graphs and DTW.  These tools were perfect for comparing two songs. The spotify API turned out to be super versatile and I learned using many of the techniques it offers. 
+</div>
+
+---
+
+<div style="max-width:600px; margin: 0 auto;"> 
+
+
+#### Nas inspired by Beethoven
+
+![Nas](/Users/julie/Pictures/nas.jpg)  ![beethoven](/Users/julie/Pictures/beet.jpg)
+
+
+
+#### Lady Gaga inspired by Vittorio Monti
+
+![Lady Gaga](/Users/julie/Pictures/gagatwee.jpg)  ![Monti](/Users/julie/Pictures/monti.jpg)
+
+
+#### Ella Fitzgerald inspired by Claude Debussy
+
+![Firzgerald](/Users/julie/Pictures/ella.jpg)  ![Debussy](/Users/julie/Pictures/debussy.jpg)
+
+</div>
+
+
 
